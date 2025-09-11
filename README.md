@@ -56,8 +56,8 @@ prisma/
 ### Installation
 ```bash
 # Clone repo
-git clone https://github.com/your-username/vehicle-maintenance-api.git
-cd vehicle-maintenance-api
+git clone https://github.com/franz1628/maintenancenest.git
+cd maintenancenest
 
 # Install dependencies
 npm install
@@ -95,7 +95,7 @@ model Maintenance {
 
 Then create a `.env` file:
 ```env
-DATABASE_URL="mysql://root:password@localhost:3306/vehicle_db"
+DATABASE_URL="mysql://root:password@localhost:3306/maintenance"
 ```
 
 ---
