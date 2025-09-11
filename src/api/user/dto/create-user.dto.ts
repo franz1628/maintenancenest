@@ -1,33 +1,51 @@
-export class CreateUserDto {
-    /*
-     id               Int        @id @default(autoincrement())
-  name             String     @db.VarChar(100)
-  last_name        String     @db.VarChar(100)
-  second_last_name String?    @db.VarChar(100)
-  password         String     @db.VarChar(255)
-  email            String     @unique(map: "email") @db.VarChar(100)
-  birth_date       DateTime   @db.Date
-  phone            String?    @db.VarChar(15)
-  number_document  String     @unique(map: "number_document") @db.VarChar(50)
-  id_type_document Int
-  state            Int?       @default(1) @db.TinyInt
-  created_at       DateTime?  @default(now()) @db.Timestamp(0)
-  updated_at       DateTime?  @default(now()) @db.Timestamp(0)
-  service          service[]
-  vehicule         vehicule[]
-    */
+import { IsDate, IsEmail, isEmail, IsIn, IsInt, IsPhoneNumber, IsString, MinLength } from "class-validator";
 
+/*
+creame un json de ejemplo
+con datos ficticios
+para crear un usuario
+conforme al dto CreateUserDto
+{
+  "name": "John",
+  "last_name": "Doe",
+  "second_last_name": "Smith",
+  "password": "SecurePass",
+  "email": "john.doe@example.com"
+  "birth_date": "1990-01-01",
+  "phone": "123-456-7890",
+  "number_document": "A12345678",
+  "id_type_document": 1
+}
+
+
+*/
+export class CreateUserDto {
+    @IsString()
+    @MinLength(3)
     name: string;
+    @IsString()
+    @MinLength(3)
     last_name: string;
+    @IsString()
+    @MinLength(3)
     second_last_name?: string;
+    @IsString()
+    @MinLength(8)
     password: string;
+    @IsString()
+    @MinLength(5)
+    @IsEmail()
     email: string;
+    @IsString()
     birth_date: Date;
+    @IsString()
     phone?: string;
+    @IsString()
+    @MinLength(5)
     number_document: string;
+    @IsInt()
     id_type_document: number;
-    state?: number;
-    created_at?: Date;
-    updated_at?: Date;
+    @IsInt()
+    state?: number
 
 }
