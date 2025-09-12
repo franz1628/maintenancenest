@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'prisma/prisma.service';
@@ -9,8 +9,13 @@ export class UserService {
     this.prisma = prisma;
   }
 
-  create(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({ data: createUserDto });
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.findByEmail(createUserDto.email);
+    if(user!=null){
+      //un error que lleve al filter que no sea NotFoundException
+      throw new ConflictException('Email already in use');
+    }
+    return this.prisma.user.create({ data: { ...createUserDto, birth_date: new Date(createUserDto.birth_date) } });
   }
 
   findAll() {
@@ -38,5 +43,9 @@ export class UserService {
     await this.findOne(id);
 
     return this.prisma.user.update({ where: { id }, data: { state: 0 } });
+  }
+
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
   }
 }

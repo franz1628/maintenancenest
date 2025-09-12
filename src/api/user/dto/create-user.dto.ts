@@ -1,4 +1,4 @@
-import { IsDate, IsEmail, isEmail, IsIn, IsInt, IsPhoneNumber, IsString, MinLength } from "class-validator";
+import { IsDate, IsDateString, IsEmail, isEmail, IsIn, IsInt, IsPhoneNumber, IsString, MinLength } from "class-validator";
 
 /*
 creame un json de ejemplo
@@ -36,8 +36,8 @@ export class CreateUserDto {
     @MinLength(5)
     @IsEmail()
     email: string;
-    @IsString()
-    birth_date: Date;
+    @IsDateString({ strict: false })
+    birth_date: string;
     @IsString()
     phone?: string;
     @IsString()

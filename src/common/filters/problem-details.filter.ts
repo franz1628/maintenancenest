@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 
 @Catch()
 export class ProblemDetailsFilter implements ExceptionFilter {
@@ -19,38 +20,43 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     let detail: string | object = 'An unexpected error occurred';
     let type = 'about:blank';
 
-    if (exception instanceof HttpException) {
+    console.log(exception);
+    
+    
+    // Prisma: error de constraint UNIQUE
+    if (
+      exception instanceof Prisma.PrismaClientKnownRequestError &&
+      exception.code === 'P2002'
+    ) {
+      status = HttpStatus.CONFLICT;
+      title = 'Conflict';
+      type = 'https://httpstatuses.com/409';
+      detail = `Unique constraint failed on field(s): ${exception.meta?.target}`;
+    }
+
+    // Prisma: error de FK o relación
+    else if (
+      exception instanceof Prisma.PrismaClientKnownRequestError &&
+      exception.code === 'P2003'
+    ) {
+      status = HttpStatus.BAD_REQUEST;
+      title = 'Invalid relation';
+      type = 'https://httpstatuses.com/400';
+      detail = `Invalid relation reference: ${exception.meta?.field_name}`;
+    }
+    
+
+    // NestJS HttpException normal
+    else if (exception instanceof HttpException) {
       status = exception.getStatus();
       const res = exception.getResponse();
-
       if (typeof res === 'string') {
         detail = res;
       } else if (typeof res === 'object') {
-        const obj = res as Record<string, any>;
-        detail = obj.message ?? JSON.stringify(res);
+        detail = (res as any).message ?? JSON.stringify(res);
       }
-
-      switch (status) {
-        case HttpStatus.NOT_FOUND:
-          title = 'Resource not found';
-          type = 'https://httpstatuses.com/404';
-          break;
-        case HttpStatus.BAD_REQUEST:
-          title = 'Bad Request';
-          type = 'https://httpstatuses.com/400';
-          break;
-        case HttpStatus.UNAUTHORIZED:
-          title = 'Unauthorized';
-          type = 'https://httpstatuses.com/401';
-          break;
-        case HttpStatus.FORBIDDEN:
-          title = 'Forbidden';
-          type = 'https://httpstatuses.com/403';
-          break;
-        default:
-          title = 'Error';
-          type = `https://httpstatuses.com/${status}`;
-      }
+      type = `https://httpstatuses.com/${status}`;
+      title = HttpStatus[status] ?? 'Error';
     }
 
     response.status(status).json({
