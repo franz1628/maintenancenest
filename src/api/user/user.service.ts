@@ -10,10 +10,10 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const user = await this.findByEmail(createUserDto.email);
+    const user = await this.findByEmailOrNumberDocument(createUserDto.email, createUserDto.number_document);
     if(user!=null){
       //un error que lleve al filter que no sea NotFoundException
-      throw new ConflictException('Email already in use');
+      throw new ConflictException('Email or Number Document already in use');
     }
     return this.prisma.user.create({ data: { ...createUserDto, birth_date: new Date(createUserDto.birth_date) } });
   }
@@ -36,6 +36,13 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     await this.findOne(id);
 
+    if (updateUserDto.email || updateUserDto.number_document) {
+      const user = await this.findByEmailOrNumberDocument(updateUserDto.email, updateUserDto.number_document);
+      if (user && user.id !== id) {
+        throw new ConflictException('Email or Number Document already in use');
+      }
+    }
+
     return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }
 
@@ -45,7 +52,14 @@ export class UserService {
     return this.prisma.user.update({ where: { id }, data: { state: 0 } });
   }
 
-  async findByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+  async findByEmailOrNumberDocument(email?: string, number_document?: string) {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { number_document }
+        ]
+      }
+    });
   }
 }
