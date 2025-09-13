@@ -9,13 +9,12 @@ export class UserService {
     this.prisma = prisma;
   }
 
-  async create(createUserDto: CreateUserDto) {
-    const user = await this.findByEmailOrNumberDocument(createUserDto.email, createUserDto.number_document);
-    if(user!=null){
-      //un error que lleve al filter que no sea NotFoundException
+  async create(create: CreateUserDto) {
+    const model = await this.findByEmailOrNumberDocument(create.email, create.number_document);
+    if(model!=null){
       throw new ConflictException('Email or Number Document already in use');
     }
-    return this.prisma.user.create({ data: { ...createUserDto, birth_date: new Date(createUserDto.birth_date) } });
+    return this.prisma.user.create({ data: { ...create, birth_date: new Date(create.birth_date) } });
   }
 
   findAll() {
@@ -25,25 +24,25 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const model = await this.prisma.user.findUnique({ where: { id } });
 
-    if (!user) {
+    if (!model) {
       throw new NotFoundException('User not found');
     }
-    return user;
+    return model;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, update: UpdateUserDto) {
     await this.findOne(id);
 
-    if (updateUserDto.email || updateUserDto.number_document) {
-      const user = await this.findByEmailOrNumberDocument(updateUserDto.email, updateUserDto.number_document);
-      if (user && user.id !== id) {
+    if (update.email || update.number_document) {
+      const model = await this.findByEmailOrNumberDocument(update.email, update.number_document);
+      if (model && model.id !== id) {
         throw new ConflictException('Email or Number Document already in use');
       }
     }
 
-    return this.prisma.user.update({ where: { id }, data: updateUserDto });
+    return this.prisma.user.update({ where: { id }, data: update });
   }
 
   async remove(id: number) {
