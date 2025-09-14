@@ -10,11 +10,11 @@ export class BrandService {
   }
 
   async create(create: CreateBrandDto) {
-      const model = await this.findByName(create.name);
-      if(model!=null){
-        throw new ConflictException('Brand name already in use');
-      }
-      return this.prisma.brand.create({ data: { ...create } });
+    const model = await this.findByName(create.name);
+    if(model!=null){
+      throw new ConflictException('Brand name already in use');
+    }
+    return this.prisma.brand.create({ data: { ...create } });
   }
 
   findAll() {
@@ -33,7 +33,7 @@ export class BrandService {
   }
 
   async update(id: number, update: UpdateBrandDto) {
-     await this.findOne(id);
+    await this.findOne(id);
 
     if (update.name) {
       const model = await this.findByName(update.name);
@@ -51,7 +51,7 @@ export class BrandService {
     return this.prisma.brand.update({ where: { id }, data: { state: 0 } });
   }
 
-   async findByName(name?: string) {
+  async findByName(name?: string) {
     return this.prisma.brand.findFirst({
       where: {
         name

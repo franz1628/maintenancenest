@@ -1,24 +1,4 @@
-import { IsDate, IsDateString, IsEmail, isEmail, IsIn, IsInt, IsPhoneNumber, IsString, MinLength } from "class-validator";
-
-/*
-creame un json de ejemplo
-con datos ficticios
-para crear un usuario
-conforme al dto CreateUserDto
-{
-  "name": "John",
-  "last_name": "Doe",
-  "second_last_name": "Smith",
-  "password": "SecurePass",
-  "email": "john.doe@example.com"
-  "birth_date": "1990-01-01",
-  "phone": "123-456-7890",
-  "number_document": "A12345678",
-  "id_type_document": 1
-}
-
-
-*/
+import { IsDateString, IsEmail, IsInt, IsString, MinLength } from "class-validator";
 export class CreateUserDto {
     @IsString()
     @MinLength(3)
