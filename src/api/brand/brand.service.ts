@@ -10,11 +10,11 @@ export class BrandService {
   }
 
   async create(create: CreateBrandDto) {
-      const model = await this.findByName(create.name);
-      if(model!=null){
-        throw new ConflictException('Brand name already in use');
-      }
-      return this.prisma.brand.create({ data: { ...create } });
+    const model = await this.findByName(create.name);
+    if(model!=null){
+      throw new ConflictException('Brand name already in use');
+    }
+    return this.prisma.brand.create({ data: { ...create } });
   }
 
   findAll() {
