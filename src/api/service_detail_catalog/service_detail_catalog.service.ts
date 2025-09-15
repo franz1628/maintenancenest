@@ -10,9 +10,7 @@ export class ServiceDetailCatalogService {
   }
 
   async create(create: CreateServiceDetailCatalogDto) {
-    if(create.id_service_catalog){
-      await this.validServiceCatalog(create.id_service_catalog);
-    }
+    await this.validServiceCatalog(create.id_service_catalog);
 
     if(create.id_piece_catalog){
       await this.validPieceCatalog(create.id_piece_catalog);

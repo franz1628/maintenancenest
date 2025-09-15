@@ -13,9 +13,11 @@ import { ToolCatalogModule } from './api/tool_catalog/tool_catalog.module';
 import { VehicleModule } from './api/vehicle/vehicle.module';
 import { ServiceDetailCatalogModule } from './api/service_detail_catalog/service_detail_catalog.module';
 import { TypeDocumentModule } from './api/type_document/type_document.module';
+import { ServiceModule } from './api/service/service.module';
+import { ServiceDetailModule } from './api/service_detail/service_detail.module';
 
 @Module({
-  imports: [UserModule, BrandModule, ModelModule, MecanicModule, PieceCatalogModule, SellerModule, ServiceCatalogModule, ToolCatalogModule, VehicleModule, ServiceDetailCatalogModule, TypeDocumentModule],
+  imports: [UserModule, BrandModule, ModelModule, MecanicModule, PieceCatalogModule, SellerModule, ServiceCatalogModule, ToolCatalogModule, VehicleModule, ServiceDetailCatalogModule, TypeDocumentModule, ServiceModule, ServiceDetailModule],
   controllers: [AppController],
   providers: [AppService],
 })
