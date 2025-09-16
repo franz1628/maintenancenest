@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('brand')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
@@ -12,6 +14,7 @@ export class BrandController {
     return this.brandService.create(createBrandDto);
   }
 
+  
   @Get()
   findAll() {
     return this.brandService.findAll();
