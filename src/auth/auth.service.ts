@@ -8,12 +8,8 @@ export class AuthService {
   constructor(private jwtService: JwtService, private prisma: PrismaService) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-
-    // This should be replaced with a real user lookup
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) return null;
-    const pas = await bcrypt.hash(password, 10);
-    console.log(pas);
     
     const isPasswordValid = await bcrypt.compare(password, user.password);
     return isPasswordValid ? user : null;
