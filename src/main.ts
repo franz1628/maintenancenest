@@ -17,6 +17,9 @@ async function bootstrap() {
     .addTag('maintenance')
     .build();
 
+  /* CORS */
+  app.enableCors();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
