@@ -18,9 +18,7 @@ export class UserService {
   }
 
   findAll() {
-    return this.prisma.user.findMany({
-      where: { state: 1 }
-    });
+    return this.prisma.user.findMany();
   }
 
   async findOne(id: number) {

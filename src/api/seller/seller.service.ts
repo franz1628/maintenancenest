@@ -18,9 +18,7 @@ export class SellerService {
   }
 
   findAll() {
-    return this.prisma.seller.findMany({
-      where: { state: 1 }
-    });
+    return this.prisma.seller.findMany();
   }
 
   async findOne(id: number) {

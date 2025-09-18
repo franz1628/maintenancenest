@@ -18,9 +18,7 @@ export class BrandService {
   }
 
   findAll() {
-    return this.prisma.brand.findMany({
-      where: { state: 1 }
-    });
+    return this.prisma.brand.findMany();
   }
 
   async findOne(id: number) {
