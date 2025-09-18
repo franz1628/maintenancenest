@@ -11,6 +11,8 @@ export class ModelService {
 
   async create(create: CreateModelDto) {
       const model = await this.findByNameAndBrand(create.name, create.id_brand);
+      await this.validBrand(create.id_brand);
+
       if(model!=null){
         throw new ConflictException('Model name already in use for this brand');
       }
@@ -18,11 +20,14 @@ export class ModelService {
   }
 
   findAll() {
-     return this.prisma.model.findMany();
+    // show the brand
+    return this.prisma.model.findMany({
+      include: { brand: true }
+    });
   }
 
   async findOne(id: number) {
-    const model = await this.prisma.model.findUnique({ where: { id } });
+    const model = await this.prisma.model.findUnique({ where: { id }, include: { brand: true } });
 
     if (!model) {
       throw new NotFoundException('Model not found');
@@ -32,6 +37,10 @@ export class ModelService {
 
   async update(id: number, update: UpdateModelDto) {
     await this.findOne(id);
+    
+    if(update.id_brand != null){
+      await this.validBrand(update.id_brand);
+    }
 
     if (update.name) {
       const model = await this.findByNameAndBrand(update.name, update.id_brand);
@@ -56,5 +65,16 @@ export class ModelService {
         id_brand
       }
     });
+  }
+
+  async validBrand(id_brand: number) {
+    const model = await this.prisma.brand.findFirst({
+      where: {
+        id: id_brand
+      }
+    });
+    if (!model) {
+      throw new NotFoundException('Brand not found or inactive');
+    }
   }
 }
