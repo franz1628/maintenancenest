@@ -25,7 +25,7 @@ model mecanic {
   second_last_name String?          @db.VarChar(100)
   email            String           @unique(map: "email") @db.VarChar(100)
   password         String           @db.VarChar(255)
-  id_type_document Int
+  id_document_type Int
   number_document  String           @unique(map: "number_document") @db.VarChar(50)
   phone            String?          @db.VarChar(15)
   photo            String?          @db.VarChar(255)
@@ -36,10 +36,10 @@ model mecanic {
   state            Int?             @default(1) @db.TinyInt
   created_at       DateTime?        @default(now()) @db.Timestamp(0)
   updated_at       DateTime?        @default(now()) @db.Timestamp(0)
-  type_document    type_document    @relation(fields: [id_type_document], references: [id], onDelete: Cascade, map: "mecanic_ibfk_1")
+  document_type    document_type    @relation(fields: [id_document_type], references: [id], onDelete: Cascade, map: "mecanic_ibfk_1")
   service_detail   service_detail[]
 
-  @@index([id_type_document], map: "id_type_document")
+  @@index([id_document_type], map: "id_document_type")
 }
 
 model model {
@@ -75,7 +75,7 @@ model seller {
   second_last_name String?       @db.VarChar(100)
   email            String        @unique(map: "email") @db.VarChar(100)
   password         String        @db.VarChar(255)
-  id_type_document Int
+  id_document_type Int
   number_document  String        @unique(map: "number_document") @db.VarChar(50)
   phone            String?       @db.VarChar(15)
   photo            String?       @db.VarChar(255)
@@ -84,10 +84,10 @@ model seller {
   state            Int?          @default(1) @db.TinyInt
   created_at       DateTime?     @default(now()) @db.Timestamp(0)
   updated_at       DateTime?     @default(now()) @db.Timestamp(0)
-  type_document    type_document @relation(fields: [id_type_document], references: [id], onDelete: Cascade, map: "seller_ibfk_1")
+  document_type    document_type @relation(fields: [id_document_type], references: [id], onDelete: Cascade, map: "seller_ibfk_1")
   service          service[]
 
-  @@index([id_type_document], map: "id_type_document")
+  @@index([id_document_type], map: "id_document_type")
 }
 
 model service {
@@ -184,17 +184,6 @@ model tool_catalog {
   service_detail_catalog service_detail_catalog[]
 }
 
-model type_document {
-  id          Int       @id @default(autoincrement())
-  name        String    @db.VarChar(100)
-  description String?   @db.VarChar(255)
-  state       Int?      @default(1) @db.TinyInt
-  created_at  DateTime? @default(now()) @db.Timestamp(0)
-  updated_at  DateTime? @default(now()) @db.Timestamp(0)
-  mecanic     mecanic[]
-  seller      seller[]
-}
-
 model vehicle {
   id         Int       @id @default(autoincrement())
   plate      String    @unique(map: "plate") @db.VarChar(20)
@@ -223,10 +212,21 @@ model user {
   birth_date       DateTime  @db.Date
   phone            String?   @db.VarChar(15)
   number_document  String    @unique(map: "number_document") @db.VarChar(50)
-  id_type_document Int
+  id_document_type Int
   state            Int?      @default(1) @db.TinyInt
   created_at       DateTime? @default(now()) @db.Timestamp(0)
   updated_at       DateTime? @default(now()) @db.Timestamp(0)
   service          service[]
   vehicle          vehicle[]
+}
+
+model document_type {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  description String?   @db.VarChar(255)
+  state       Int?      @default(1) @db.TinyInt
+  created_at  DateTime? @default(now()) @db.Timestamp(0)
+  updated_at  DateTime? @default(now()) @db.Timestamp(0)
+  mecanic     mecanic[]
+  seller      seller[]
 }

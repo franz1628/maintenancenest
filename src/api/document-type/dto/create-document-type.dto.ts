@@ -1,6 +1,6 @@
 import { IsInt, IsString, MinLength } from "class-validator";
 
-export class CreateTypeDocumentDto {
+export class CreateDocumentTypeDto {
   @IsString()
   @MinLength(3)
   name: string;

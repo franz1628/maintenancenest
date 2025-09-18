@@ -24,7 +24,7 @@ export class CreateSellerDto {
     @MinLength(5)
     number_document: string;
     @IsInt()
-    id_type_document: number;
+    id_document_type: number;
     @IsInt()
     state?: number
 
