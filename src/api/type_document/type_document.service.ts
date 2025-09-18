@@ -18,9 +18,7 @@ export class TypeDocumentService {
   }
 
   findAll() {
-    return this.prisma.type_document.findMany({
-      where: { state: 1 }
-    });
+    return this.prisma.type_document.findMany();
   }
 
   async findOne(id: number) {

@@ -18,9 +18,7 @@ export class PieceCatalogService {
   }
 
   findAll() {
-    return this.prisma.piece_catalog.findMany({
-      where: { state: 1 }
-    });
+    return this.prisma.piece_catalog.findMany();
   }
 
   async findOne(id: number) {

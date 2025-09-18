@@ -18,9 +18,7 @@ export class VehicleService {
   }
 
   findAll() {
-    return this.prisma.vehicle.findMany({
-      where: { state: 1 }
-    });
+    return this.prisma.vehicle.findMany();
   }
 
   async findOne(id: number) {

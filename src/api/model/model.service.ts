@@ -18,9 +18,7 @@ export class ModelService {
   }
 
   findAll() {
-     return this.prisma.model.findMany({
-      where: { state: 1 }
-    });
+     return this.prisma.model.findMany();
   }
 
   async findOne(id: number) {

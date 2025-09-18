@@ -19,9 +19,7 @@ constructor(private readonly prisma: PrismaService) {
   }
 
   findAll() {
-    return this.prisma.service_detail_catalog.findMany({
-      where: { state: 1 }
-    });
+    return this.prisma.service_detail_catalog.findMany();
   }
 
   async findOne(id: number) {

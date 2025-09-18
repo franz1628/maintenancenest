@@ -4,7 +4,7 @@ import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
+//@UseGuards(AuthGuard('jwt'))
 @Controller('brand')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}

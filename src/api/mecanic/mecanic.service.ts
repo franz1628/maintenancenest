@@ -18,9 +18,7 @@ export class MecanicService {
   }
 
   findAll() {
-    return this.prisma.mecanic.findMany({
-      where: { state: 1 }
-    });
+    return this.prisma.mecanic.findMany();
   }
 
   async findOne(id: number) {
