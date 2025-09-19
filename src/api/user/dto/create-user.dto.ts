@@ -10,7 +10,7 @@ export class CreateUserDto {
     @MinLength(3)
     second_last_name?: string;
     @IsString()
-    @MinLength(8)
+    @MinLength(6)
     password: string;
     @IsString()
     @MinLength(5)

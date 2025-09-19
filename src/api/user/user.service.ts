@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -14,15 +15,19 @@ export class UserService {
     if(model!=null){
       throw new ConflictException('Email or Number Document already in use');
     }
+    const passwordHash = await bcrypt.hash(create.password, 10);
+    create.password = passwordHash;
     return this.prisma.user.create({ data: { ...create, birth_date: new Date(create.birth_date) } });
   }
 
   findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: { document_type: true },
+    });
   }
 
   async findOne(id: number) {
-    const model = await this.prisma.user.findUnique({ where: { id } });
+    const model = await this.prisma.user.findUnique({ where: { id }, include: { document_type: true } });
 
     if (!model) {
       throw new NotFoundException('User not found');
@@ -38,6 +43,11 @@ export class UserService {
       if (model && model.id !== id) {
         throw new ConflictException('Email or Number Document already in use');
       }
+    }
+
+    if (update.password) {
+      const passwordHash = await bcrypt.hash(update.password, 10);
+      update.password = passwordHash;
     }
 
     return this.prisma.user.update({ where: { id }, data: update });

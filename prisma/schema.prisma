@@ -203,21 +203,24 @@ model vehicle {
 }
 
 model user {
-  id               Int       @id @default(autoincrement())
-  name             String    @db.VarChar(100)
-  last_name        String    @db.VarChar(100)
-  second_last_name String?   @db.VarChar(100)
-  password         String    @db.VarChar(255)
-  email            String    @unique(map: "email") @db.VarChar(100)
-  birth_date       DateTime  @db.Date
-  phone            String?   @db.VarChar(15)
-  number_document  String    @unique(map: "number_document") @db.VarChar(50)
+  id               Int           @id @default(autoincrement())
+  name             String        @db.VarChar(100)
+  last_name        String        @db.VarChar(100)
+  second_last_name String?       @db.VarChar(100)
+  password         String        @db.VarChar(255)
+  email            String        @unique(map: "email") @db.VarChar(100)
+  birth_date       DateTime      @db.Date
+  phone            String?       @db.VarChar(15)
+  number_document  String        @unique(map: "number_document") @db.VarChar(50)
   id_document_type Int
-  state            Int?      @default(1) @db.TinyInt
-  created_at       DateTime? @default(now()) @db.Timestamp(0)
-  updated_at       DateTime? @default(now()) @db.Timestamp(0)
+  state            Int?          @default(1) @db.TinyInt
+  created_at       DateTime?     @default(now()) @db.Timestamp(0)
+  updated_at       DateTime?     @default(now()) @db.Timestamp(0)
   service          service[]
+  document_type    document_type @relation(fields: [id_document_type], references: [id], onDelete: Cascade, map: "user_ibfk_1")
   vehicle          vehicle[]
+
+  @@index([id_document_type], map: "id_document_type")
 }
 
 model document_type {
@@ -229,4 +232,5 @@ model document_type {
   updated_at  DateTime? @default(now()) @db.Timestamp(0)
   mecanic     mecanic[]
   seller      seller[]
+  user        user[]
 }
