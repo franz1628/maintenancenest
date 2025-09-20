@@ -20,7 +20,9 @@ export class UserService {
     return this.prisma.user.create({ data: { ...create, birth_date: new Date(create.birth_date) } });
   }
 
-  findAll() {
+  async findAll() {
+    //sleep 4 seconds
+    await new Promise(resolve => setTimeout(resolve, 2000));
     return this.prisma.user.findMany({
       include: { document_type: true },
     });
