@@ -18,11 +18,18 @@ export class VehicleService {
   }
 
   findAll() {
-    return this.prisma.vehicle.findMany();
+    return this.prisma.vehicle.findMany({
+      include: { 
+        model: {
+          include: { brand: true }
+        }, 
+        users: true
+       }
+    });
   }
 
   async findOne(id: number) {
-    const model = await this.prisma.vehicle.findUnique({ where: { id } });
+    const model = await this.prisma.vehicle.findUnique({ where: { id }, include: { model: true, users: true } });
 
     if (!model) {
       throw new NotFoundException('Brand not found');
