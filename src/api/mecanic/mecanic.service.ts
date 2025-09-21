@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateMecanicDto } from './dto/create-mecanic.dto';
 import { UpdateMecanicDto } from './dto/update-mecanic.dto';
 import { PrismaService } from 'prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class MecanicService {
@@ -17,30 +18,41 @@ export class MecanicService {
     return this.prisma.mecanic.create({ data: { ...create, birth_date: new Date(create.birth_date) } });
   }
 
-  findAll() {
-    return this.prisma.mecanic.findMany();
+  async findAll() { 
+    return this.prisma.mecanic.findMany({
+      include: { document_type: true },
+    });
   }
 
   async findOne(id: number) {
-    const model = await this.prisma.mecanic.findUnique({ where: { id } });
+    const model = await this.prisma.mecanic.findUnique({ where: { id }, include: { document_type: true } });
 
     if (!model) {
       throw new NotFoundException('Mecanic not found');
-    }
+    } 
     return model;
   }
 
   async update(id: number, update: UpdateMecanicDto) {
     await this.findOne(id);
+    
+        if (update.email || update.number_document) {
+          const model = await this.findByEmailOrNumberDocument(update.email, update.number_document);
+          if (model && model.id !== id) {
+            throw new ConflictException('Email or Number Document already in use');
+          }
+        }
+    
+        if(update.password === '') {
+          delete update.password;
+        }
+    
+        if (update.password) {
+          const passwordHash = await bcrypt.hash(update.password, 10);
+          update.password = passwordHash;
+        }
 
-    if (update.email || update.number_document) {
-      const model = await this.findByEmailOrNumberDocument(update.email, update.number_document);
-      if (model && model.id !== id) {
-        throw new ConflictException('Email or Number Document already in use');
-      }
-    }
-
-    return this.prisma.mecanic.update({ where: { id }, data: update });
+        return this.prisma.mecanic.update({ where: { id }, data: { ...update, birth_date: new Date(update?.birth_date || '') }  });
   }
 
   async remove(id: number) {
