@@ -21,8 +21,6 @@ export class UserService {
   }
 
   async findAll() {
-    //sleep 4 seconds
-    await new Promise(resolve => setTimeout(resolve, 2000));
     return this.prisma.user.findMany({
       include: { document_type: true },
     });
@@ -45,6 +43,10 @@ export class UserService {
       if (model && model.id !== id) {
         throw new ConflictException('Email or Number Document already in use');
       }
+    }
+
+    if(update.password === '') {
+      delete update.password;
     }
 
     if (update.password) {

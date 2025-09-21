@@ -10,7 +10,6 @@ export class CreateSellerDto {
     @MinLength(3)
     second_last_name?: string;
     @IsString()
-    @MinLength(8)
     password: string;
     @IsString()
     @MinLength(5)
@@ -20,6 +19,10 @@ export class CreateSellerDto {
     birth_date: string;
     @IsString()
     phone?: string;
+    @IsString()
+    address?: string;
+    @IsString()
+    photo?: string;
     @IsString()
     @MinLength(5)
     number_document: string;
