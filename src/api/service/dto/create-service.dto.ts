@@ -1,4 +1,4 @@
-import { IsDate, IsDateString, IsDecimal, IsIn, IsInt, IsString } from "class-validator";
+import { IsDate, IsDateString, IsDecimal, IsIn, IsInt, IsNumber, IsString } from "class-validator";
 
 export class CreateServiceDto {
   @IsInt()
@@ -9,9 +9,9 @@ export class CreateServiceDto {
   id_service_catalog: number;
   @IsInt()
   id_seller: number;
-  @IsDateString()
-  date_service: Date;
-  @IsDecimal()
+  @IsDateString({ strict: false })
+  date_service: string;
+  @IsNumber()
   total: number;
   @IsString()
   status: string;
@@ -19,8 +19,8 @@ export class CreateServiceDto {
   observations?: string;
   @IsInt()
   state?: number;
-  @IsDateString()
-  date_initial?: Date;
-  @IsDateString()
-  date_final?: Date;
+  @IsDateString({ strict: false })
+  date_initial: string;
+  @IsDateString({ strict: false })
+  date_final: string;
 }
