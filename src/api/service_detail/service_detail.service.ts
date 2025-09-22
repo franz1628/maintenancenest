@@ -20,11 +20,13 @@ constructor(private readonly prisma: PrismaService) {
   }
 
   findAll() {
-    return this.prisma.service_detail.findMany();
+    return this.prisma.service_detail.findMany({
+      include: { service: { include : { vehicle: true } }, service_detail_catalog: true, mecanic: true },
+    });
   }
 
   async findOne(id: number) {
-    const model = await this.prisma.service_detail.findUnique({ where: { id } });
+    const model = await this.prisma.service_detail.findUnique({ where: { id }, include: { service: { include: { vehicle: true } }, service_detail_catalog: true, mecanic: true } });
 
     if (!model) {
       throw new NotFoundException('Service detail not found');
