@@ -14,16 +14,18 @@ constructor(private readonly prisma: PrismaService) {
     await this.validUser(create.id_user);
     await this.validServiceCatalog(create.id_service_catalog);
     await this.validSeller(create.id_seller);
-    
-    return this.prisma.service_detail_catalog.create({ data: { ...create } });
+
+    return this.prisma.service.create({ data: { ...create, date_initial: new Date(create.date_initial).toISOString(), date_final: new Date(create.date_final).toISOString() } });
   }
 
   findAll() {
-    return this.prisma.service_detail_catalog.findMany();
+    return this.prisma.service.findMany({
+      include: { vehicle: true, users: true, service_catalog: true, seller: true },
+    });
   }
 
   async findOne(id: number) {
-    const model = await this.prisma.service_detail_catalog.findUnique({ where: { id } });
+    const model = await this.prisma.service.findUnique({ where: { id }, include: { vehicle: true, users: true, service_catalog: true, seller: true } });
 
     if (!model) {
       throw new NotFoundException('Service detail not found');
@@ -49,13 +51,22 @@ constructor(private readonly prisma: PrismaService) {
     if(update.id_seller){
       await this.validSeller(update.id_seller);
     }
-    return this.prisma.service_detail_catalog.update({ where: { id }, data: update });
+
+    if(update.date_initial) {
+      update = {...update, date_initial: new Date(update.date_initial).toISOString()};
+    }
+
+    if(update.date_final) {
+      update = {...update, date_final: new Date(update.date_final).toISOString()};
+    }
+
+    return this.prisma.service.update({ where: { id }, data: {...update} });
   }
 
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.service_detail_catalog.update({ where: { id }, data: { state: 0 } });
+    return this.prisma.service.update({ where: { id }, data: { state: 0 } });
   }
 
   async validVehicle(id_vehicle: number) {

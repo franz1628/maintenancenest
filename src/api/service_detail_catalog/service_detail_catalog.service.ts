@@ -20,15 +20,24 @@ export class ServiceDetailCatalogService {
       await this.validToolCatalog(create.id_tool_catalog);
     }
 
+    if(create.id_piece_catalog === 0){
+      create.id_piece_catalog = null;
+    }
+    if(create.id_tool_catalog === 0){
+      create.id_tool_catalog = null;
+    }
+
     return this.prisma.service_detail_catalog.create({ data: { ...create } });
   }
 
   findAll() {
-    return this.prisma.service_detail_catalog.findMany();
+    return this.prisma.service_detail_catalog.findMany({
+      include: { service_catalog: true, piece_catalog: true, tool_catalog: true },
+    });
   }
 
   async findOne(id: number) {
-    const model = await this.prisma.service_detail_catalog.findUnique({ where: { id } });
+    const model = await this.prisma.service_detail_catalog.findUnique({ where: { id }, include: { service_catalog: true, piece_catalog: true, tool_catalog: true } });
 
     if (!model) {
       throw new NotFoundException('Service detail not found');
@@ -49,6 +58,13 @@ export class ServiceDetailCatalogService {
 
     if(update.id_tool_catalog){
       await this.validToolCatalog(update.id_tool_catalog);
+    }
+
+    if(update.id_piece_catalog === 0){
+      update.id_piece_catalog = null;
+    }
+    if(update.id_tool_catalog === 0){
+      update.id_tool_catalog = null;
     }
 
     return this.prisma.service_detail_catalog.update({ where: { id }, data: update });

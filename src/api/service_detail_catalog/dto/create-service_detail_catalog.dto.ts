@@ -4,9 +4,9 @@ export class CreateServiceDetailCatalogDto {
   @IsInt()
   id_service_catalog: number;
   @IsInt()
-  id_piece_catalog?: number;
+  id_piece_catalog?: number | null;
   @IsInt()
-  id_tool_catalog?: number;
+  id_tool_catalog?: number | null;
   @IsString()
   description?: string;
   @IsInt()
