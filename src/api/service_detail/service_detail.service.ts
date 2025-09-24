@@ -59,8 +59,7 @@ constructor(private readonly prisma: PrismaService) {
   async validService(id_service: number) {
     const service = await this.prisma.service.findFirst({
       where: {
-        id: id_service,
-        state: 1
+        id: id_service
       }
     });
     if (!service) {
@@ -71,8 +70,7 @@ constructor(private readonly prisma: PrismaService) {
   async validServiceDetailCatalog(id_service_detail_catalog: number) {
     const serviceDetailCatalog = await this.prisma.service_detail.findFirst({
       where: {
-        id: id_service_detail_catalog,
-        state: 1
+        id: id_service_detail_catalog
       }
     });
     if (!serviceDetailCatalog) {
@@ -83,8 +81,7 @@ constructor(private readonly prisma: PrismaService) {
   async validMecanic(id_mecanic: number) {
     const mecanic = await this.prisma.mecanic.findFirst({
       where: {
-        id: id_mecanic,
-        state: 1
+        id: id_mecanic
       }
     });
     if (!mecanic) {
