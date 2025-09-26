@@ -1,12 +1,14 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UseInterceptors } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { PrismaService } from 'prisma/prisma.service';
+import { UploadService } from 'src/common/upload/upload.service';
 
 @Injectable()
 export class BrandService {
-  constructor(private readonly prisma: PrismaService) {
+  constructor(private readonly prisma: PrismaService, private readonly uploadService: UploadService) {
     this.prisma = prisma;
+    this.uploadService = uploadService;
   }
 
   async create(create: CreateBrandDto) {
@@ -55,5 +57,11 @@ export class BrandService {
         name
       }
     });
+  }
+
+  async uploadLogo(id: number, file: Express.Multer.File) {
+    await this.findOne(id);
+    const upload = await this.uploadService.saveFile(file);
+    return this.prisma.brand.update({ where: { id }, data: { photo: upload.filename } });
   }
 }
