@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Express } from 'express';
+import { promises as fs } from 'fs';
 
 @Injectable()
 export class UploadService {
@@ -27,5 +28,19 @@ export class UploadService {
       path: file.path,
       size: file.size,
     }));
+  }
+
+  async removeFile(filename: string) {
+    const pathFile = `uploads/brand/${filename}`;
+
+    fs.unlink(pathFile)
+    .then(() => {
+      console.log('File deleted successfully');
+    })
+    .catch((err) => {
+      console.error('Error deleting file:', err);
+    });
+   
+    return true;
   }
 }

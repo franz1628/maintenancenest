@@ -60,8 +60,13 @@ export class BrandService {
   }
 
   async uploadLogo(id: number, file: Express.Multer.File) {
-    await this.findOne(id);
+    const model = await this.findOne(id);
     const upload = await this.uploadService.saveFile(file);
+    
+    if (model.photo && upload.filename) {
+      await this.uploadService.removeFile(model.photo);
+    }
+
     return this.prisma.brand.update({ where: { id }, data: { photo: upload.filename } });
   }
 }
