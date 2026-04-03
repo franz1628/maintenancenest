@@ -18,9 +18,10 @@ import { DocumentTypeModule } from './api/document-type/document-type.module';
 import { ServiceModule } from './api/service/service.module';
 import { ServiceDetailModule } from './api/service_detail/service_detail.module';
 import { AuthModule } from './auth/auth.module';
+import { UploadModule } from './common/upload/upload.module';
 
 @Module({
-  imports: [UserModule, BrandModule, ModelModule, MecanicModule, PieceCatalogModule, SellerModule, ServiceCatalogModule, ToolCatalogModule, VehicleModule, ServiceDetailCatalogModule, DocumentTypeModule, ServiceModule, ServiceDetailModule, AuthModule],
+  imports: [UserModule, BrandModule, ModelModule, MecanicModule, PieceCatalogModule, SellerModule, ServiceCatalogModule, ToolCatalogModule, VehicleModule, ServiceDetailCatalogModule, DocumentTypeModule, ServiceModule, ServiceDetailModule, AuthModule, UploadModule],
   controllers: [AppController],
   providers: [
     AppService,
