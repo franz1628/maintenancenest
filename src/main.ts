@@ -15,6 +15,8 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('vehicles')
     .addTag('maintenance')
+    .addBearerAuth()
+    .addSecurityRequirements('bearer')
     .build();
 
   /* CORS */
