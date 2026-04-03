@@ -63,10 +63,10 @@ export class BrandService {
     const model = await this.findOne(id);
     const upload = await this.uploadService.saveFile(file);
     
-    if (model.photo && upload.filename) {
-      await this.uploadService.removeFile(model.photo);
+    if (model.logo && upload.filename) {
+      await this.uploadService.removeFile(model.logo);
     }
 
-    return this.prisma.brand.update({ where: { id }, data: { photo: upload.filename } });
+    return this.prisma.brand.update({ where: { id }, data: { logo: upload.filename } });
   }
 }
