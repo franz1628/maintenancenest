@@ -1,19 +1,11 @@
-<<<<<<< HEAD
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-=======
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { BrandService } from './brand.service';
-import { CreateBrandDto } from './dto/create-brand.dto';
-import { UpdateBrandDto } from './dto/update-brand.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
->>>>>>> 0afc760223eaa9e844b8ea333eea6da9a3087bc7
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Brand')
 @Controller('brand')
@@ -55,11 +47,11 @@ export class BrandController {
         callback(null, `${uniqueSuffix}${extname(file.originalname)}`);
       }
     }),
-    limits: { fileSize: 5 * 1024 * 1024 }, 
+    limits: { fileSize: 5 * 1024 * 1024 },
   }))
   uploadLogo(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
     console.log(file);
-    
+
     return this.brandService.uploadLogo(+id, file);
   }
 }
