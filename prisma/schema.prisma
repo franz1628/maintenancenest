@@ -12,6 +12,7 @@ model brand {
   name        String    @db.VarChar(100)
   description String?   @db.VarChar(255)
   logo        String?   @db.VarChar(255)
+  photo       String?   @db.VarChar(255)
   state       Int?      @default(1) @db.TinyInt
   created_at  DateTime? @default(now()) @db.Timestamp(0)
   updated_at  DateTime? @default(now()) @db.Timestamp(0)
@@ -46,6 +47,7 @@ model model {
   id          Int       @id @default(autoincrement())
   name        String    @db.VarChar(100)
   description String?   @db.VarChar(255)
+  photo       String?   @db.VarChar(255)
   id_brand    Int
   state       Int?      @default(1) @db.TinyInt
   created_at  DateTime? @default(now()) @db.Timestamp(0)
@@ -60,6 +62,7 @@ model piece_catalog {
   id                     Int                      @id @default(autoincrement())
   name                   String                   @db.VarChar(100)
   description            String?                  @db.VarChar(255)
+  photo                  String?                  @db.VarChar(255)
   price                  Decimal                  @db.Decimal(10, 2)
   stock                  Int
   state                  Int?                     @default(1) @db.TinyInt
@@ -110,6 +113,7 @@ model service {
   service_catalog    service_catalog  @relation(fields: [id_service_catalog], references: [id], onDelete: Cascade, map: "service_ibfk_3")
   seller             seller           @relation(fields: [id_seller], references: [id], onDelete: Cascade, map: "service_ibfk_4")
   service_detail     service_detail[]
+  service_photo      service_photo[]
 
   @@index([id_seller], map: "id_seller")
   @@index([id_service_catalog], map: "id_service_catalog")
@@ -121,6 +125,7 @@ model service_catalog {
   id                     Int                      @id @default(autoincrement())
   name                   String                   @db.VarChar(100)
   description            String?                  @db.VarChar(255)
+  photo                  String?                  @db.VarChar(255)
   price                  Decimal                  @db.Decimal(10, 2)
   duration_minutes       Int
   state                  Int?                     @default(1) @db.TinyInt
@@ -147,6 +152,7 @@ model service_detail {
   service                   service                @relation(fields: [id_service], references: [id], onDelete: Cascade, map: "service_detail_ibfk_1")
   mecanic                   mecanic?               @relation(fields: [id_mecanic], references: [id], onDelete: Cascade, map: "service_detail_ibfk_2")
   service_detail_catalog    service_detail_catalog @relation(fields: [id_service_detail_catalog], references: [id], onDelete: Cascade, map: "service_detail_ibfk_3")
+  service_detail_photo      service_detail_photo[]
 
   @@index([id_mecanic], map: "id_mecanic")
   @@index([id_service], map: "id_service")
@@ -159,6 +165,7 @@ model service_detail_catalog {
   id_piece_catalog   Int?
   id_tool_catalog    Int?
   description        String?          @db.VarChar(255)
+  photo              String?          @db.VarChar(255)
   duration_minutes   Int?
   state              Int?             @default(1) @db.TinyInt
   created_at         DateTime?        @default(now()) @db.Timestamp(0)
@@ -185,18 +192,19 @@ model tool_catalog {
 }
 
 model vehicle {
-  id         Int       @id @default(autoincrement())
-  plate      String    @unique(map: "plate") @db.VarChar(20)
-  color      String?   @db.VarChar(50)
-  id_user    Int
-  id_model   Int
-  kilometers Int?
-  state      Int?      @default(1) @db.TinyInt
-  created_at DateTime? @default(now()) @db.Timestamp(0)
-  updated_at DateTime? @default(now()) @db.Timestamp(0)
-  service    service[]
-  users      user      @relation(fields: [id_user], references: [id], onDelete: Cascade, map: "vehicle_ibfk_1")
-  model      model     @relation(fields: [id_model], references: [id], onDelete: Cascade, map: "vehicle_ibfk_2")
+  id            Int             @id @default(autoincrement())
+  plate         String          @unique(map: "plate") @db.VarChar(20)
+  color         String?         @db.VarChar(50)
+  id_user       Int
+  id_model      Int
+  kilometers    Int?
+  state         Int?            @default(1) @db.TinyInt
+  created_at    DateTime?       @default(now()) @db.Timestamp(0)
+  updated_at    DateTime?       @default(now()) @db.Timestamp(0)
+  service       service[]
+  users         user            @relation(fields: [id_user], references: [id], onDelete: Cascade, map: "vehicle_ibfk_1")
+  model         model           @relation(fields: [id_model], references: [id], onDelete: Cascade, map: "vehicle_ibfk_2")
+  vehicle_photo vehicle_photo[]
 
   @@index([id_user], map: "id_user")
   @@index([id_model], map: "id_model")
@@ -208,6 +216,7 @@ model user {
   last_name        String        @db.VarChar(100)
   second_last_name String?       @db.VarChar(100)
   password         String        @db.VarChar(255)
+  photo            String?       @db.VarChar(255)
   email            String        @unique(map: "email") @db.VarChar(100)
   birth_date       DateTime      @db.Date
   phone            String?       @db.VarChar(15)
@@ -233,4 +242,40 @@ model document_type {
   mecanic     mecanic[]
   seller      seller[]
   user        user[]
+}
+
+model service_detail_photo {
+  id                Int            @id @default(autoincrement())
+  id_service_detail Int
+  photo             String         @db.VarChar(255)
+  description       String?        @db.VarChar(255)
+  created_at        DateTime?      @default(now()) @db.Timestamp(0)
+  updated_at        DateTime?      @default(now()) @db.Timestamp(0)
+  service_detail    service_detail @relation(fields: [id_service_detail], references: [id], onDelete: Cascade, map: "service_detail_photo_ibfk_1")
+
+  @@index([id_service_detail], map: "id_service_detail")
+}
+
+model service_photo {
+  id          Int       @id @default(autoincrement())
+  id_service  Int
+  photo       String    @db.VarChar(255)
+  description String?   @db.VarChar(255)
+  created_at  DateTime? @default(now()) @db.Timestamp(0)
+  updated_at  DateTime? @default(now()) @db.Timestamp(0)
+  service     service   @relation(fields: [id_service], references: [id], onDelete: Cascade, map: "service_photo_ibfk_1")
+
+  @@index([id_service], map: "id_service")
+}
+
+model vehicle_photo {
+  id          Int       @id @default(autoincrement())
+  id_vehicle  Int
+  photo       String    @db.VarChar(255)
+  description String?   @db.VarChar(255)
+  created_at  DateTime? @default(now()) @db.Timestamp(0)
+  updated_at  DateTime? @default(now()) @db.Timestamp(0)
+  vehicle     vehicle   @relation(fields: [id_vehicle], references: [id], onDelete: Cascade, map: "vehicle_photo_ibfk_1")
+
+  @@index([id_vehicle], map: "id_vehicle")
 }

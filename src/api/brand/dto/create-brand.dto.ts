@@ -1,4 +1,4 @@
-import { IsInt, IsString, min, MinLength, minLength } from "class-validator";
+import { IsInt, IsString, MinLength } from "class-validator";
 
 export class CreateBrandDto {
     @IsString()
@@ -10,6 +10,9 @@ export class CreateBrandDto {
 
     @IsString()
     logo?: string = '';
+
+    @IsString()
+    photo?: string = '';
 
     @IsInt()
     state?: number = 1;
