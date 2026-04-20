@@ -5,7 +5,7 @@ import { UpdateBrandDto } from './dto/update-brand.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Brand')
 @Controller('brand')
@@ -39,6 +39,19 @@ export class BrandController {
   }
 
   @Post(':id/uploadLogo')
+  @ApiOperation({ summary: 'Upload a logo for a brand' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
       destination: './uploads/brand',

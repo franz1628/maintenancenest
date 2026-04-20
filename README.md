@@ -1,47 +1,57 @@
 # 🚗 Vehicle Maintenance API
 
-A RESTful API built with [NestJS](https://nestjs.com/) and [Prisma](https://www.prisma.io/) to manage vehicles, their maintenance records, and service schedules.
+A RESTful API built with [NestJS](https://nestjs.com/) and [Prisma](https://www.prisma.io/) to manage vehicles, maintenance records, parts catalogs, and service schedules.
 
 ---
 
 ## ✨ Features
-- CRUD operations for **vehicles**
-- Manage **maintenance records** (oil changes, inspections, repairs, etc.)
-- Track **service schedules** and upcoming appointments
-- Modular structure using **NestJS modules**
-- Database access powered by **Prisma ORM**
-- Input validation with **class-validator**
-- Built-in API documentation with **Swagger**
+- **Authentication & Authorization**: Secure API with JWT-based authentication.
+- **Vehicle Management**: Complete CRUD operations for vehicles, brands, and models.
+- **Service & Maintenance**: Manage service records, maintenance schedules, and assigned mechanics.
+- **Catalogs**: Manage piece catalogs, service catalogs, and tool catalogs.
+- **Roles & Users**: Seller, Mechanic, and User management.
+- **File Uploads**: Logo/photo uploading capabilities.
+- **Modular Structure**: Organized using NestJS modules (e.g., Auth, Brand, Service, etc.).
+- **Database Access**: Powered by Prisma ORM.
+- **Input Validation**: Strongly typed dtos and validation with class-validator.
+- **API Documentation**: Built-in interactive documentation using Swagger.
 
 ---
 
 ## 🛠️ Tech Stack
 - [NestJS](https://nestjs.com/) – Node.js framework
 - [TypeScript](https://www.typescriptlang.org/) – Strongly typed JavaScript
-- [Prisma](https://www.prisma.io/) – Next-gen ORM
+- [Prisma v6](https://www.prisma.io/) – Modern ORM
 - [MySQL/PostgreSQL](https://www.postgresql.org/) – Database
 - [Swagger](https://swagger.io/) – API documentation
+- [Passport/JWT](https://passportjs.org/) - Secure Auth
 
 ---
 
 ## 📂 Project Structure
 ```
 src/
- ├── vehicles/
- │    ├── vehicles.controller.ts
- │    ├── vehicles.module.ts
- │    ├── vehicles.service.ts
- ├── maintenance/
- │    ├── maintenance.controller.ts
- │    ├── maintenance.module.ts
- │    ├── maintenance.service.ts
- ├── prisma/
- │    └── prisma.service.ts
+ ├── api/
+ │    ├── brand/                  # Brand management
+ │    ├── document-type/          # Document types catalog
+ │    ├── mecanic/                # Mechanics management
+ │    ├── model/                  # Vehicle models
+ │    ├── piece_catalog/          # Spare parts catalog
+ │    ├── seller/                 # Seller management
+ │    ├── service/                # Service execution records
+ │    ├── service_catalog/        # Available services
+ │    ├── service_detail/         # Specific service details
+ │    ├── service_detail_catalog/ # Valid service details
+ │    ├── tool_catalog/           # Tools available
+ │    ├── user/                   # App users
+ │    └── vehicle/                # Vehicles
+ ├── auth/                        # JWT Auth endpoints and guards
+ ├── common/                      # Shared decorators, interceptors, and upload config
  ├── app.module.ts
  └── main.ts
 
 prisma/
- └── schema.prisma
+ └── schema.prisma                # Database schema
 ```
 
 ---
@@ -64,38 +74,11 @@ npm install
 ```
 
 ### Database Configuration
-Edit `prisma/schema.prisma` with your DB provider and connection string:
+Edit `.env` file with your DB connection string:
 
-```prisma
-datasource db {
-  provider = "mysql" // or "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-model Vehicle {
-  id          Int           @id @default(autoincrement())
-  make        String
-  model       String
-  year        Int
-  maintenance Maintenance[]
-}
-
-model Maintenance {
-  id         Int      @id @default(autoincrement())
-  description String
-  date        DateTime @default(now())
-  vehicleId   Int
-  vehicle     Vehicle   @relation(fields: [vehicleId], references: [id])
-}
-```
-
-Then create a `.env` file:
 ```env
 DATABASE_URL="mysql://root:password@localhost:3306/maintenance"
+JWT_SECRET="YOUR_SUPER_SECRET_KEY"
 ```
 
 ---
@@ -126,12 +109,12 @@ Swagger docs at:
 
 ---
 
-## 📖 Example Endpoints
+## 📖 Example Module Architecture
 
-- **GET** `/vehicles` → list all vehicles
-- **POST** `/vehicles` → add a new vehicle
-- **GET** `/maintenance/:id` → get maintenance record by ID
-- **POST** `/maintenance` → add maintenance entry
+This project is built around independent API modules, making it very scalable:
+- **Authentication (`/auth/login`)**: Use your credentials to generate a valid Bearer Token. Keep the token to authenticate with guarded endpoints.
+- **Catalogs**: Reference endpoints storing lists of available pieces, tools, and predefined services.
+- **Service Process (`/service`)**: Connecting vehicles, mechanics, tools, and the chosen service catalogs to trace the execution history.
 
 ---
 
@@ -143,11 +126,6 @@ npm run test
 # e2e tests
 npm run test:e2e
 ```
-
----
-
-## 🤝 Contributing
-Pull requests are welcome! Please open an issue first to discuss what you’d like to change.
 
 ---
 
