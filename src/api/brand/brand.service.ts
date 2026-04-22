@@ -13,7 +13,7 @@ export class BrandService {
 
   async create(create: CreateBrandDto) {
     const model = await this.findByName(create.name);
-    if(model!=null){
+    if (model != null) {
       throw new ConflictException('Brand name already in use');
     }
     return this.prisma.brand.create({ data: { ...create } });
@@ -62,11 +62,11 @@ export class BrandService {
   async uploadLogo(id: number, file: Express.Multer.File) {
     const model = await this.findOne(id);
     const upload = await this.uploadService.saveFile(file);
-    
+
     if (model.logo && upload.filename) {
       await this.uploadService.removeFile(model.logo);
     }
 
-    return this.prisma.brand.update({ where: { id }, data: { logo: upload.filename } });
+    return this.prisma.brand.update({ where: { id }, data: { logo: upload.filename, photo: upload.filename } });
   }
 }
