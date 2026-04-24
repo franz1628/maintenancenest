@@ -6,10 +6,7 @@ import { UploadService } from 'src/common/upload/upload.service';
 
 @Injectable()
 export class BrandService {
-  constructor(private readonly prisma: PrismaService, private readonly uploadService: UploadService) {
-    this.prisma = prisma;
-    this.uploadService = uploadService;
-  }
+  constructor(private readonly prisma: PrismaService, private readonly uploadService: UploadService) { }
 
   async create(create: CreateBrandDto) {
     const model = await this.findByName(create.name);
@@ -42,7 +39,7 @@ export class BrandService {
       }
     }
 
-    return this.prisma.brand.update({ where: { id }, data: update });
+    return this.prisma.brand.update({ where: { id }, data: { name: update.name, description: update.description, state: update.state } });
   }
 
   async remove(id: number) {
