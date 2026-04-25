@@ -60,11 +60,26 @@ export class BrandController {
         callback(null, `${uniqueSuffix}${extname(file.originalname)}`);
       }
     }),
-    limits: { fileSize: 5 * 1024 * 1024 },
-  }))
-  uploadLogo(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+    limits: { fileSize: 500 * 1024 }, // 500 KB
+    fileFilter: (req, file, callback) => {
+      const allowedTypes = /jpg|jpeg|png/;
+      const ext = extname(file.originalname).toLowerCase();
+      const mimeType = file.mimetype;
 
+      if (
+        allowedTypes.test(ext) &&
+        (mimeType === 'image/jpeg' || mimeType === 'image/png')
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error('Solo se permiten imágenes JPG, JPEG o PNG'), false);
+      }
+    },
+  }))
+  uploadLogo(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File
+  ) {
     return this.brandService.uploadLogo(+id, file);
   }
 }
